@@ -10,10 +10,13 @@ public class Game {
     public Game(){
         figurines = new ArrayList<>();
         loadDefaultPosition();
-        allFigurines();
     }
 
-    public String allFigurines(){
+    public void play(){
+        
+    }
+
+    public String showAllFigurines(){
         for (int i = 0; i < 24; i++) {
             System.out.println(figurines.get(i).toString());
         }
@@ -37,7 +40,6 @@ public class Game {
             return "Error loading default position";
         }
     }
-
 }
 
 /*
