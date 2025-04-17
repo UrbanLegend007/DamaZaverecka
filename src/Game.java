@@ -12,13 +12,27 @@ public class Game {
     }
 
     public String inicializationOfFigurines(){
-        for (int i = 0; i < 16; i++) {
-            figurines.add(new Figurine())
+        for (int i = 1; i <= 8; i++) {
+            int x;
+            if(i % 2 == 0){
+                x = 2;
+                addFigurine(true, x, i);
+            } else {
+                x = 1;
+                addFigurine(true, x, i);
+                x = 3;
+                addFigurine(true, x, i);
+            }
         }
+//        for (int i = 1; i <= 12; i++) {
+//            addFigurine(false, , i);
+//        }
+        return "Game Finished";
     }
 
     public String addFigurine(boolean white, int line, int column){
-        figurines.add()
+        figurines.add(new Figurine(white, line, column));
+        return "Figurine added";
     }
 
     public String loadDefaultPosition(){
@@ -26,7 +40,7 @@ public class Game {
         try (BufferedReader reader = new BufferedReader(new FileReader("res/defaultPosition"))){
             while((line = reader.readLine()) != null){
                 String parts[] = line.split(";");
-
+                addFigurine(true, Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
             }
         } catch (Exception e){
 
@@ -34,3 +48,17 @@ public class Game {
     }
 
 }
+
+/*
+   line
+     _________________________
+   8 |__|__|__|__|__|__|__|__|
+   7 |__|__|__|__|__|__|__|__|
+   6 |__|__|__|__|__|__|__|__|
+   5 |__|__|__|__|__|__|__|__|
+   4 |__|__|__|__|__|__|__|__|
+   3 |__|__|__|__|__|__|__|__|
+   2 |__|__|__|__|__|__|__|__|
+   1 |__|__|__|__|__|__|__|__|
+       1  2  3  4  5  6  7  8  column
+ */
