@@ -9,25 +9,15 @@ public class Game {
 
     public Game(){
         figurines = new ArrayList<>();
+        loadDefaultPosition();
+        allFigurines();
     }
 
-    public String inicializationOfFigurines(){
-        for (int i = 1; i <= 8; i++) {
-            int x;
-            if(i % 2 == 0){
-                x = 2;
-                addFigurine(true, x, i);
-            } else {
-                x = 1;
-                addFigurine(true, x, i);
-                x = 3;
-                addFigurine(true, x, i);
-            }
+    public String allFigurines(){
+        for (int i = 0; i < 24; i++) {
+            System.out.println(figurines.get(i).toString());
         }
-//        for (int i = 1; i <= 12; i++) {
-//            addFigurine(false, , i);
-//        }
-        return "Game Finished";
+        return "Those are figurines in this game";
     }
 
     public String addFigurine(boolean white, int line, int column){
@@ -39,11 +29,12 @@ public class Game {
         String line;
         try (BufferedReader reader = new BufferedReader(new FileReader("res/defaultPosition"))){
             while((line = reader.readLine()) != null){
-                String parts[] = line.split(";");
-                addFigurine(true, Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+                String parts[] = line.split(",");
+                addFigurine(Boolean.parseBoolean(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
             }
+            return "Default position loaded";
         } catch (Exception e){
-
+            return "Error loading default position";
         }
     }
 

@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Figurine {
 
     boolean white;
@@ -10,6 +12,17 @@ public class Figurine {
         this.position = new int[]{line, column};
     }
 
+    @Override
+    public String toString() {
+        return "Figurine: " +
+                "white = " + white +
+                ", queen = " + queen +
+                ", position = " + Arrays.toString(position);
+    }
+
+    public void setQueen(boolean queen){
+        this.queen = queen;
+    }
 
     public boolean isWhite() {
         return white;
@@ -18,6 +31,7 @@ public class Figurine {
     public boolean isQueen() {
         return queen;
     }
+
     public int[] getPosition() {
         return position;
     }
