@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 public class Frame extends JFrame {
 
-    private static final int FRAME_WIDTH = 1000, FRAME_HEIGHT = 850;
+//    private static final int FRAME_WIDTH = 850, FRAME_HEIGHT = 850;
 
     Timer timer = new Timer(1000, new ActionListener() {
         @Override
@@ -14,24 +14,14 @@ public class Frame extends JFrame {
         }
     });
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-    }
-
     public Frame() {
-        JPanel mainPanel = new JPanel();
-        mainPanel.setBackground(Color.WHITE);
-        mainPanel.setLayout(null);
+        BoardPanel boardPanel = new BoardPanel();
+        this.add(boardPanel);
 
-        this.add(mainPanel);
-
-        this.pack();
-        this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setResizable(true);
+        this.pack();
         this.setLocationRelativeTo(null);
-        this.getContentPane().setBackground(Color.BLACK);
+        this.setResizable(false);
 
         timer.start();
 
