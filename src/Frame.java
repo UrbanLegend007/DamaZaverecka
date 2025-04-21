@@ -14,18 +14,27 @@ public class Frame extends JFrame {
         }
     });
 
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+    }
+
     public Frame() {
         JPanel mainPanel = new JPanel();
+        mainPanel.setBackground(Color.WHITE);
+        mainPanel.setLayout(null);
 
-        this.getContentPane().add(mainPanel);
+        this.add(mainPanel);
 
         this.pack();
         this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(true);
         this.setLocationRelativeTo(null);
-        this.getContentPane().setBackground(new Color(180, 180, 180));
+        this.getContentPane().setBackground(Color.BLACK);
 
         timer.start();
+
+        this.setVisible(true);
     }
 }
