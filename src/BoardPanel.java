@@ -20,6 +20,8 @@ class BoardPanel extends JPanel {
                 g.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
             }
         }
+        g.setColor(Color.RED);
+        g.fillOval(1 * SQUARE_SIZE + 10, 2 * SQUARE_SIZE + 10, SQUARE_SIZE - 20, SQUARE_SIZE - 20);
     }
 
     @Override
