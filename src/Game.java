@@ -5,26 +5,12 @@ import java.util.ArrayList;
 
 public class Game {
 
-//    ArrayList<Figurine> figurines;
     private Figurine[][] board;
 
     public Game(){
         board = new Figurine[8][8];
-//        figurines = new ArrayList<>();
         loadDefaultPosition();
-        printBoardState();
     }
-
-    public void play(){
-        
-    }
-
-//    public String showAllFigurines(){
-//        for (int i = 0; i < 24; i++) {
-//            System.out.println(figurines.get(i).toString());
-//        }
-//        return "Those are figurines in this game";
-//    }
 
     public Figurine getFigurineAt(int line, int column) {
         int row = 8 - line;
@@ -36,7 +22,6 @@ public class Game {
         int row = 8 - line;
         int col = column - 1;
         board[row][col] = new Figurine(white);
-//        figurines.add(new Figurine(white, line, column));
         return "Figurine added";
     }
 

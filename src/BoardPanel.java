@@ -11,18 +11,30 @@ class BoardPanel extends JPanel {
         super.paintComponent(g);
         int size = 8;
 
-        for (int row = 0; row < size; row++) {
+        for (int lin = 0; lin < size; lin++) {
             for (int col = 0; col < size; col++) {
-                if ((row + col) % 2 == 0) {
+                if ((lin + col) % 2 == 0) {
                     g.setColor(Color.WHITE);
                 } else {
                     g.setColor(Color.BLACK);
                 }
-                g.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+                g.fillRect(col * SQUARE_SIZE, lin * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
             }
         }
-        g.setColor(Color.RED);
-        g.fillOval(1 * SQUARE_SIZE + 10, 2 * SQUARE_SIZE + 10, SQUARE_SIZE - 20, SQUARE_SIZE - 20);
+        for (int lin = 1; lin <= size; lin++) {
+            for (int col = 1; col <= size; col++) {
+                Figurine f = game.getFigurineAt(lin,col);
+                if(f != null) {
+                    if(f.isWhite()) {
+                        g.setColor(Color.WHITE);
+                    }else{
+                        g.setColor(Color.RED);
+                    }
+                    g.fillOval((col - 1) * SQUARE_SIZE + 10, (8 - lin) * SQUARE_SIZE + 10, SQUARE_SIZE - 20, SQUARE_SIZE - 20);
+
+                }
+            }
+        }
     }
 
     @Override
