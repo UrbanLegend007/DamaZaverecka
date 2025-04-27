@@ -24,12 +24,11 @@ public class Game {
     }
 
     public void moveFigurine(int fromLine, int fromColumn, int toLine, int toColumn) {
-//        int fromRow = 8 - fromLine;
-//        int fromCol = fromColumn - 1;
-//        int toRow = 8 - toLine;
-//        int toCol = toColumn -1;
-        System.out.println(fromLine + " " + fromColumn + " " + toLine + " " + toColumn);
 
+        if(!((toLine + toColumn) % 2 == 0)){
+            System.out.println("You can't move the figurine at all");
+            return;
+        }
         if (getFigurineAt(toLine, toColumn) != null){
             System.out.println("You can't move the figurine");
         } else {
