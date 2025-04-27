@@ -1,27 +1,11 @@
-import java.util.Arrays;
-
 public class Figurine {
 
-    boolean white;
-    boolean queen = false;
+    private boolean white;
+    private boolean queen;
 
-    int[] position;
-
-    public Figurine(boolean white, int line, int column){
+    public Figurine(boolean white) {
         this.white = white;
-        this.position = new int[]{line, column};
-    }
-
-    @Override
-    public String toString() {
-        return "Figurine: " +
-                "white = " + white +
-                ", queen = " + queen +
-                ", position = " + Arrays.toString(position);
-    }
-
-    public void setQueen(boolean queen){
-        this.queen = queen;
+        this.queen = false;
     }
 
     public boolean isWhite() {
@@ -32,7 +16,15 @@ public class Figurine {
         return queen;
     }
 
-    public int[] getPosition() {
-        return position;
+    public void setQueen(boolean queen) {
+        this.queen = queen;
+    }
+
+    @Override
+    public String toString() {
+        return "Figurine{" +
+                "white=" + white +
+                ", queen=" + queen +
+                '}';
     }
 }

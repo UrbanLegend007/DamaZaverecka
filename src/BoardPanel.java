@@ -5,6 +5,7 @@ class BoardPanel extends JPanel {
 
     private static final int SQUARE_SIZE = 100;
     private static final int BOARD_SIZE = 8 * SQUARE_SIZE;
+    Game game = new Game();
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
