@@ -12,31 +12,34 @@ public class Game {
         loadDefaultPosition();
     }
 
-    public Figurine getFigurineAt(int line, int column) {
-        int row = 8 - line;
-        int col = column - 1;
-        return board[row][col];
+    public Figurine getFigurineAt(int line, int col) {
+        return board[line][col];
     }
 
-    public String addFigurine(boolean white, int line, int column){
-        int row = 8 - line;
-        int col = column - 1;
-        board[row][col] = new Figurine(white);
+    public String addFigurine(boolean white, int line, int col){
+        line -= 1;
+        col -= 1;
+        board[line][col] = new Figurine(white);
         return "Figurine added";
     }
 
     public void moveFigurine(int fromLine, int fromColumn, int toLine, int toColumn) {
-        int fromRow = 8 - fromLine;
-        int fromCol = fromColumn - 1;
-        int toRow = 8 - toLine;
-        int toCol = toColumn - 1;
+//        int fromRow = 8 - fromLine;
+//        int fromCol = fromColumn - 1;
+//        int toRow = 8 - toLine;
+//        int toCol = toColumn -1;
+        System.out.println(fromLine + " " + fromColumn + " " + toLine + " " + toColumn);
 
-        Figurine f = board[fromRow][fromCol];
-        board[fromRow][fromCol] = null;
-        board[toRow][toCol] = f;
-
-        if ((f.isWhite() && toLine == 8) || (!f.isWhite() && toLine == 1)) {
-            f.setQueen(true);
+        if (getFigurineAt(toLine, toColumn) != null){
+            System.out.println("You can't move the figurine");
+        } else {
+            Figurine f = board[fromLine][fromColumn];
+            board[fromLine][fromColumn] = null;
+            board[toLine][toColumn] = f;
+            if ((f.isWhite() && toLine == 7) || (!f.isWhite() && toLine == 0)) {
+                f.setQueen(true);
+                System.out.println("Queen");
+            }
         }
     }
 
