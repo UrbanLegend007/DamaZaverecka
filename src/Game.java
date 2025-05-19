@@ -7,7 +7,9 @@ public class Game {
 
     private Figurine[][] board;
     private boolean take;
-    private boolean white;
+    private int[] whiteMoves = new int[2];
+    private int[] blackMoves = new int[2];
+    private int checked = 0;
 
     public Game(){
         board = new Figurine[8][8];
@@ -26,7 +28,7 @@ public class Game {
     }
 
     public void moveFigurine(int fromLine, int fromColumn, int toLine, int toColumn) {
-        boolean move = false;
+        //BUDU KONTROLOVAT KAZDOU FIGURKU
         if(!((toLine + toColumn) % 2 == 0)){
             System.out.println("You can't move the figurine at all");
             return;
@@ -34,68 +36,40 @@ public class Game {
         if (getFigurineAt(toLine, toColumn) != null){
             System.out.println("You can't move the figurine");
             return;
-        } else {
-            move = true;
-//            Figurine f = board[fromLine][fromColumn];
-//            board[fromLine][fromColumn] = null;
-//            board[toLine][toColumn] = f;
-//            if ((f.isWhite() && toLine == 7) || (!f.isWhite() && toLine == 0)) {
-//                f.setQueen(true);
-//                System.out.println("Queen");
-//            }
         }
-        if(move){
-            if(getFigurineAt(fromLine, fromColumn).isWhite()){
-                if(getFigurineAt(fromLine, fromColumn).isQueen()){
-                    if((fromLine+1 == toLine || fromLine-1 == toLine) && (fromColumn+1 == toColumn || fromColumn-1 == toColumn)){
-                        Figurine f = board[fromLine][fromColumn];
-                        board[fromLine][fromColumn] = null;
-                        board[toLine][toColumn] = f;
-                        System.out.println("Queen moved.");
-                    } else {
-                        System.out.println("Queen didnt move.");
-                    }
-                } else {
-                    if(fromLine+1 == toLine && (fromColumn+1 == toColumn || fromColumn-1 == toColumn)){
-                        Figurine f = board[fromLine][fromColumn];
-                        board[fromLine][fromColumn] = null;
-                        board[toLine][toColumn] = f;
-                        System.out.println("Figurine moved.");
-                        if ((f.isWhite() && toLine == 7) || (!f.isWhite() && toLine == 0)) {
-                            f.setQueen(true);
-                            System.out.println("Queen");
-                        }
-                    } else {
-                        System.out.println("Figurine didnt move.");
-                    }
-                }
-            } else {
-                if(getFigurineAt(fromLine, fromColumn).isQueen()){
-                    if((fromLine-1 == toLine || fromLine+1 == toLine) && (fromColumn+1 == toColumn || fromColumn-1 == toColumn)){
-                        Figurine f = board[fromLine][fromColumn];
-                        board[fromLine][fromColumn] = null;
-                        board[toLine][toColumn] = f;
-                        System.out.println("Queen moved.");
-                    } else {
-                        System.out.println("Queen didnt move.");
-                    }
-                } else {
-                    if(fromLine-1 == toLine && (fromColumn-1 == toColumn || fromColumn+1 == toColumn)){
-                        Figurine f = board[fromLine][fromColumn];
-                        board[fromLine][fromColumn] = null;
-                        board[toLine][toColumn] = f;
-                        System.out.println("Figurine moved.");
-                        if ((f.isWhite() && toLine == 7) || (!f.isWhite() && toLine == 0)) {
-                            f.setQueen(true);
-                            System.out.println("Queen");
-                        }
-                    } else {
-                        System.out.println("Figurine didnt move.");
-                    }
-                }
+        System.out.println("checking");
+        checkMove(fromLine, fromColumn, toLine, toColumn);
+        System.out.println("checked");
+    }
+
+    public void checkMove(int fromLine, int fromColumn, int toLine, int toColumn){
+        if(getFigurineAt(fromLine,fromColumn) == null){
+            return;
+        }
+        int i;
+        if(getFigurineAt(fromLine,fromColumn).isWhite()){
+            i = 1;
+        } else {
+            i = -1;
+        }
+        if(getFigurineAt(fromLine, fromColumn).isQueen()){
+            if(fromLine-i != toLine || fromLine+i != toLine){
+                return;
             }
         }
-//        takeFigurine(fromLine, fromColumn);
+        if(fromLine+i == toLine && (fromColumn+i == toColumn || fromColumn-i == toColumn)){
+            Figurine f = board[fromLine][fromColumn];
+            board[fromLine][fromColumn] = null;
+            board[toLine][toColumn] = f;
+            System.out.println("Figurine moved.");
+            if ((f.isWhite() && toLine == 7) || (!f.isWhite() && toLine == 0)) {
+                f.setQueen(true);
+                System.out.println("Queen");
+            }
+            takeFigurine(fromLine, fromColumn);
+        } else {
+            System.out.println("Figurine didnt move.");
+        }
     }
 
     public String loadDefaultPosition(){
@@ -111,82 +85,58 @@ public class Game {
         }
     }
 
-//    public boolean takeFigurine(int fromLine, int fromColumn) {
-//        Figurine f = board[fromLine][fromColumn];
-//
-//        if (f == null) return false;
-//
-//        int direction = f.isWhite() ? 1 : -1; // směr pohybu obyčejné figurky
-//
-//        // směr pohybu ve 4 diagonálách: [řádek, sloupec]
-//        int[][] directions = {
-//                {direction * 1, -1}, // doleva
-//                {direction * 1, 1},  // doprava
-//                {-direction * 1, -1}, // zpětný směr doleva (jen pro královnu)
-//                {-direction * 1, 1}   // zpětný směr doprava (jen pro královnu)
-//        };
-//
-//        for (int[] dir : directions) {
-//            int midLine = fromLine + dir[0];
-//            int midCol = fromColumn + dir[1];
-//            int toLine = fromLine + 2 * dir[0];
-//            int toCol = fromColumn + 2 * dir[1];
-//
-//            if (inBounds(midLine, midCol) && inBounds(toLine, toCol)) {
-//                Figurine middle = board[midLine][midCol];
-//                Figurine target = board[toLine][toCol];
-//
-//                if (middle != null && middle.isWhite() != f.isWhite() && target == null) {
-//                    return true; // existuje figura soupeře + za ní je prázdné místo
-//                }
-//            }
+    public void takeFigurines(boolean white){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(board[i][j].isWhite() == white){
+
+
+                }
+            }
+        }
+    }
+
+    public void takeFigurine(int fromLine, int fromColumn){
+//        checked--;
+//        if(checked == 0){
+//            takeFigurine(fromLine,fromColumn);
 //        }
-//
-//        return false;
-//    }
-//
-//    private boolean inBounds(int line, int col) {
-//        return line >= 0 && line < 8 && col >= 0 && col < 8;
-//    }
+        boolean figurines[] = new boolean[5];
+        int index = 0;
+        int usedIndex = 0;
+        for (int y = -2; y <= 2; y++) {
+            if(y != 0){
 
+                int i = -1;
 
-    public boolean takeFigurine(int fromLine, int fromColumn, boolean white){
-        //ZMENIT FROM PROTOZE TO BUDU KONTROLOVAT PO TOM POHYBU
-        Figurine f = board[fromLine][fromColumn];
-        if(f == null){
-            boolean checked = false;
-            for (int y = -2; y <= 2; y++) {
+                if(y > 0){
+                    i = 1;
+                }
 
-                for (int x = y; x <= -y; x-=2*y) {
-                    if(!checked){
-                        Figurine take = board[fromLine+x][fromColumn+x];
-                        if(take != null){
-                            if(take.isWhite()){
-                                white = true;
+                for (int x = -i*y; x < i*y; x=i*y) {
+
+                    if((fromLine+y) >= 0 && (fromLine+y) < 8 && (fromColumn+x) >= 0 && (fromColumn+x) < 8){
+                        Figurine f = board[fromLine+y][fromColumn+x];
+                        if(f != null){
+                            if(y == -2 || y == 1){
+                                figurines[index] = f.isWhite();
+                                index++;
+                            } else {
+                                if(f.isWhite() != figurines[usedIndex]){
+                                    take = true;
+                                    usedIndex++;
+                                } else {
+                                    take = false;
+                                }
+                                System.out.println("take is " + take);
+                                System.out.println("x = " + (fromColumn+1) + " y = " + (fromLine+1));
                             }
-                        } else {
-                            x = 2;
-                            checked = true;
                         }
                     }
                 }
             }
         }
-        return take;
     }
-
-//    public void printBoardState() {
-//        for (int row = 0; row < 8; row++) {
-//            for (int col = 0; col < 8; col++) {
-//                Figurine f = board[row][col];
-//                if (f != null) {
-//                    int line = 8 - row;
-//                    int column = col + 1;
-//                    System.out.println("[" + line + "," + column + "] -> " + f);
-//                }
-//            }
-//        }
-//    }
 }
 
 /*
