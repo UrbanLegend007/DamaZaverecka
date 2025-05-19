@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 
 public class Frame extends JFrame {
 
-//    private static final int FRAME_WIDTH = 850, FRAME_HEIGHT = 850;
-
     Timer timer = new Timer(1000, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
