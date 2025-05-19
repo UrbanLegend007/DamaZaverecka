@@ -52,12 +52,22 @@ public class Game {
         } else {
             i = -1;
         }
+        boolean take = false;
         if(getFigurineAt(fromLine, fromColumn).isQueen()){
-            if(fromLine-i != toLine || fromLine+i != toLine){
+            if(fromLine-(2*i) == toLine || fromColumn+(2*i) == toColumn){
+                take = true;
+                System.out.println("take");
+            } else if(!(fromLine-i == toLine || fromLine+i == toLine)){
+                System.out.println("return");
+                return;
+            }
+        } else {
+            if(!(fromLine+i == toLine)){
+                System.out.println("return figurine");
                 return;
             }
         }
-        if(fromLine+i == toLine && (fromColumn+i == toColumn || fromColumn-i == toColumn)){
+        if(fromColumn+i == toColumn || fromColumn-i == toColumn){
             Figurine f = board[fromLine][fromColumn];
             board[fromLine][fromColumn] = null;
             board[toLine][toColumn] = f;
