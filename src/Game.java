@@ -7,6 +7,7 @@ public class Game {
 
     private Figurine[][] board;
     private boolean take;
+    private boolean white;
 
     public Game(){
         board = new Figurine[8][8];
@@ -94,6 +95,7 @@ public class Game {
                 }
             }
         }
+//        takeFigurine(fromLine, fromColumn);
     }
 
     public String loadDefaultPosition(){
@@ -109,18 +111,63 @@ public class Game {
         }
     }
 
-    public boolean takeFigurine(int fromLine, int fromColumn){
+//    public boolean takeFigurine(int fromLine, int fromColumn) {
+//        Figurine f = board[fromLine][fromColumn];
+//
+//        if (f == null) return false;
+//
+//        int direction = f.isWhite() ? 1 : -1; // směr pohybu obyčejné figurky
+//
+//        // směr pohybu ve 4 diagonálách: [řádek, sloupec]
+//        int[][] directions = {
+//                {direction * 1, -1}, // doleva
+//                {direction * 1, 1},  // doprava
+//                {-direction * 1, -1}, // zpětný směr doleva (jen pro královnu)
+//                {-direction * 1, 1}   // zpětný směr doprava (jen pro královnu)
+//        };
+//
+//        for (int[] dir : directions) {
+//            int midLine = fromLine + dir[0];
+//            int midCol = fromColumn + dir[1];
+//            int toLine = fromLine + 2 * dir[0];
+//            int toCol = fromColumn + 2 * dir[1];
+//
+//            if (inBounds(midLine, midCol) && inBounds(toLine, toCol)) {
+//                Figurine middle = board[midLine][midCol];
+//                Figurine target = board[toLine][toCol];
+//
+//                if (middle != null && middle.isWhite() != f.isWhite() && target == null) {
+//                    return true; // existuje figura soupeře + za ní je prázdné místo
+//                }
+//            }
+//        }
+//
+//        return false;
+//    }
+//
+//    private boolean inBounds(int line, int col) {
+//        return line >= 0 && line < 8 && col >= 0 && col < 8;
+//    }
+
+
+    public boolean takeFigurine(int fromLine, int fromColumn, boolean white){
         //ZMENIT FROM PROTOZE TO BUDU KONTROLOVAT PO TOM POHYBU
         Figurine f = board[fromLine][fromColumn];
-        if(f != null){
-            boolean white = false;
+        if(f == null){
+            boolean checked = false;
             for (int y = -2; y <= 2; y++) {
 
-                for (int i = y; i <= 2; i-=2*y) {
-                    Figurine take = board[fromLine+i][fromColumn+i];
-                    if(take.isWhite()){
-
-                        white = true;
+                for (int x = y; x <= -y; x-=2*y) {
+                    if(!checked){
+                        Figurine take = board[fromLine+x][fromColumn+x];
+                        if(take != null){
+                            if(take.isWhite()){
+                                white = true;
+                            }
+                        } else {
+                            x = 2;
+                            checked = true;
+                        }
                     }
                 }
             }
