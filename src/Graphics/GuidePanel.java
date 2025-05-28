@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 
 public class GuidePanel extends JPanel {
 
@@ -16,11 +17,11 @@ public class GuidePanel extends JPanel {
 
         TextArea textArea = new TextArea(loadGuideText());
 
-        JScrollPane scroll = new JScrollPane(textArea);
-        scroll.setPreferredSize(new Dimension(600, 600));
-
         Button menuButton = new Button(20,20,300,100,"Menu", Color.GREEN);
         menuButton.addActionListener(e -> frame.showMenu());
+
+        JScrollPane scroll = new JScrollPane(textArea);
+        scroll.setPreferredSize(new Dimension(600, 600));
 
         grid.insets = new Insets(10, 0, 10, 0);
         grid.gridx = 0;
@@ -40,6 +41,9 @@ public class GuidePanel extends JPanel {
                 rules = sb.toString();
             }
             return rules;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Nepodařilo se načíst pravidla hry. Zkontrolujte prosím soubor rules.txt.", "Chyba při načítání", JOptionPane.ERROR_MESSAGE);
+            return "";
         } catch (Exception e){
             return "Error loading rules";
         }
