@@ -24,7 +24,7 @@ public class Figurine {
 
     @Override
     public String toString() {
-        return "Logistics.Figurine{" +
+        return "Figurine{" +
                 "white=" + white +
                 ", queen=" + queen +
                 '}';

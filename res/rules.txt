@@ -1,19 +1,18 @@
-Goal of the Game
+Goal of the Game.
 The goal is to capture all opponent's pieces or block all their possible moves.
 
-Moving a Piece
+Moving a Piece.
 Regular pieces move diagonally forward by one square, on black tiles only.
 
-Capturing a Piece
+Capturing a Piece.
 If a player can capture an opponent's piece, they must do so.
 Capturing is done by jumping over an adjacent opponent's piece.
 Multiple captures are allowed (and required) if possible.
 
-Queen Piece
+Queen Piece.
 When a piece reaches the last row of the opponent's side, it becomes a Queen.
 A Queen can move both forward and backward diagonally by one square.
 Capturing with a Queen works the same way.
 
-Turn Order
+Turn Order.
 Players take turns. If a player has no legal moves, they lose.
-
