@@ -16,8 +16,8 @@ public class DefaultPanelFactory implements PanelFactory {
     }
 
     @Override
-    public JPanel createWinPanel(Frame frame, String winner, Runnable onRestart) {
-        return new WinPanel(winner, (Frame) onRestart);
+    public JPanel createWinPanel(Frame frame, String winner) {
+        return new WinPanel(winner, frame);
     }
 
     @Override

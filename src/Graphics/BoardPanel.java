@@ -28,16 +28,13 @@ public class BoardPanel extends JPanel {
                 int line = 7 - (e.getY() / SQUARE_SIZE);
 
                 Figurine clicked = game.getFigurineAt(line, column);
-                System.out.println("clicked: " + clicked);
 
                 if (selectedPosition == null) {
                     if (clicked != null) {
                         selectedPosition = new int[]{line, column};
-                        System.out.println("selected position: " + selectedPosition[0] + ", " + selectedPosition[1]);
                     }
                 } else {
                     game.moveFigurine(selectedPosition[0], selectedPosition[1], line, column);
-                    System.out.println("moved figurine: " + line + ", " + column);
                     if(game.isNextTake()){
                         selectedPosition = new int[]{line, column};
                     } else {
@@ -47,7 +44,6 @@ public class BoardPanel extends JPanel {
 
                     if (game.isGameOver()) {
                         String winner = game.getWinner();
-                        System.out.println("Konec hry! Vyhrál: " + winner);
                         frame.showWin(winner);
                     }
                 }

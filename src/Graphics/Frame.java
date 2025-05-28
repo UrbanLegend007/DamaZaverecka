@@ -2,18 +2,21 @@ package Graphics;
 
 import javax.swing.*;
 import java.awt.*;
+import Panels.*;
 
 public class Frame extends JFrame {
 
     private CardLayout cardLayout;
     private JPanel mainPanel;
-    MenuPanel menuPanel = new MenuPanel(this);
-    BoardPanel boardPanel = new BoardPanel(this);
-    GuidePanel guidePanel = new GuidePanel(this);
-
+    private PanelFactory panelFactory;
     public Frame() {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
+
+        this.panelFactory = new DefaultPanelFactory();
+        JPanel menuPanel = panelFactory.createMenuPanel(this);
+        JPanel boardPanel = panelFactory.createBoardPanel(this);
+        JPanel guidePanel = panelFactory.createGuidePanel(this);
 
         mainPanel.add(menuPanel, "menu");
         mainPanel.add(boardPanel, "game");
@@ -28,7 +31,7 @@ public class Frame extends JFrame {
     }
 
     public void showWin(String winner) {
-        WinPanel winPanel = new WinPanel(winner, this);
+        WinPanel winPanel = (WinPanel) panelFactory.createWinPanel(this, winner);
         restartGame(winPanel.getMenu());
 
         mainPanel.add(winPanel, "win");

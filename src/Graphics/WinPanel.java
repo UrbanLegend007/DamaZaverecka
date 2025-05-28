@@ -18,7 +18,7 @@ public class WinPanel extends JPanel {
         Button menuButton = new Button(20,220,300,100,"Menu", Color.YELLOW);
         menuButton.addActionListener(e -> frame.showMenu());
         Button exitButton = new Button(20,320,300,100,"Quit", Color.RED);
-        exitButton.setText("Exit Logistik.Game");
+        exitButton.setText("Exit Game");
         exitButton.addActionListener(e -> {System.exit(0);});
 
         grid.insets = new Insets(10, 0, 10, 0);
