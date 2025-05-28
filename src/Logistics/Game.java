@@ -1,7 +1,7 @@
+package Logistics;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class Game {
 
@@ -24,7 +24,7 @@ public class Game {
         line -= 1;
         col -= 1;
         board[line][col] = new Figurine(white);
-        return "Figurine added";
+        return "Logistics.Figurine added";
     }
 
     public void moveFigurine(int fromLine, int fromColumn, int toLine, int toColumn) {
@@ -82,7 +82,7 @@ public class Game {
         int takeLine;
         if(!take){
             if(!(fromColumn+i == toColumn || fromColumn-i == toColumn)){
-                System.out.println("Figurine didnt move.");
+                System.out.println("Logistics.Figurine didnt move.");
                 return;
             }
         } else {
@@ -118,7 +118,7 @@ public class Game {
         Figurine f = board[fromLine][fromColumn];
         board[fromLine][fromColumn] = null;
         board[toLine][toColumn] = f;
-        System.out.println("Figurine moved.");
+        System.out.println("Logistics.Figurine moved.");
         if ((f.isWhite() && toLine == 7) || (!f.isWhite() && toLine == 0)) {
             f.setQueen(true);
             System.out.println("Queen");
@@ -179,8 +179,8 @@ public class Game {
 
                 for (int x = -i*y; x < i*y; x=i*y) {
                     System.out.println("we´re checking figurines at " + x + "," + y);
-                    System.out.println((fromLine+y));
-                    System.out.println((fromColumn+x));
+                    System.out.println((fromLine+y) + " line y");
+                    System.out.println((fromColumn+x) + " column x");
 
                     if(((fromLine+y) >= 0 && (fromLine+y) < 8) && ((fromColumn+x) >= 0 && (fromColumn+x) < 8)){
                         System.out.println("x = " + (fromColumn+x) + " y = " + (fromLine+y) + " is checking");

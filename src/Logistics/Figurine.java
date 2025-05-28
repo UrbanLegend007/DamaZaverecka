@@ -1,3 +1,5 @@
+package Logistics;
+
 public class Figurine {
 
     private boolean white;
@@ -22,7 +24,7 @@ public class Figurine {
 
     @Override
     public String toString() {
-        return "Figurine{" +
+        return "Logistics.Figurine{" +
                 "white=" + white +
                 ", queen=" + queen +
                 '}';
