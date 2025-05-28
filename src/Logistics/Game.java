@@ -226,7 +226,7 @@ public class Game {
 
     public String loadDefaultPosition(){
         String line;
-        try (BufferedReader reader = new BufferedReader(new FileReader("res/defaultPosition"))){
+        try (BufferedReader reader = new BufferedReader(new FileReader("res/defaultPosition.txt"))){
             while((line = reader.readLine()) != null){
                 String parts[] = line.split(",");
                 addFigurine(Boolean.parseBoolean(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
