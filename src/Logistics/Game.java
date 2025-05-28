@@ -2,14 +2,20 @@ package Logistics;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
 
     private Figurine[][] board;
     private boolean take;
-    private boolean winner;
+    private boolean nextTake = false;
+    private String winner;
     private boolean whiteTurn = true;
     private int checked = 0;
+    private boolean gameOver = false;
+    private String warningText = null;
+    public List<Move> moves = new ArrayList<>();
 
     public Game(){
         board = new Figurine[8][8];
@@ -24,34 +30,35 @@ public class Game {
         line -= 1;
         col -= 1;
         board[line][col] = new Figurine(white);
-        return "Logistics.Figurine added";
+        return "Logistik.Figurine added";
     }
 
     public void moveFigurine(int fromLine, int fromColumn, int toLine, int toColumn) {
         if(whiteTurn){
             if(!getFigurineAt(fromLine, fromColumn).isWhite()){
+                setWarningText("Now is white's turn");
                 return;
             }
         } else {
             if(getFigurineAt(fromLine, fromColumn).isWhite()){
+                setWarningText("Now is black's turn");
                 return;
             }
         }
         if(!((toLine + toColumn) % 2 == 0)){
-            System.out.println("You can't move the figurine at all");
+            setWarningText("You can move only diagonally");
             return;
         }
         if (getFigurineAt(toLine, toColumn) != null){
-            System.out.println("You can't move the figurine");
+            setWarningText("You can't put the figurine on other figurines");
             return;
         }
-        System.out.println("checking");
         checkMove(fromLine, fromColumn, toLine, toColumn);
-        System.out.println("checked");
     }
 
     public void checkMove(int fromLine, int fromColumn, int toLine, int toColumn){
         if(getFigurineAt(fromLine,fromColumn) == null){
+            warningText = "Logistik.Figurine not found";
             return;
         }
         int i;
@@ -60,34 +67,137 @@ public class Game {
         } else {
             i = -1;
         }
-        boolean take = false;
+        take = false;
         if(getFigurineAt(fromLine, fromColumn).isQueen()){
             if(fromLine-(2*i) == toLine || fromLine+(2*i) == toLine){
                 take = true;
-                System.out.println("take");
             } else if(!(fromLine-i == toLine || fromLine+i == toLine)){
-                System.out.println("return queen");
+                warningText = "You can move only by one move up or down";
                 return;
             }
         } else {
             if(fromLine+(2*i) == toLine){
                 take = true;
-                System.out.println("take");
             } else if(!(fromLine+i == toLine)){
-                System.out.println("return figurine");
+                if(getFigurineAt(fromLine,fromColumn).isWhite()){
+                    warningText = "You can move only by one move up";
+                } else {
+                    warningText = "You can move only by one move down";
+                }
                 return;
             }
         }
+        if(!moves.isEmpty()){
+            Move move = new Move(fromLine, fromColumn, toLine, toColumn);
+            if(!moves.contains(move)){
+                setWarningText("You have to take a figurine");
+                return;
+            }
+        }
+        if(checkMovement(fromLine, fromColumn, toLine, toColumn, i, take)){
+            Figurine f = board[fromLine][fromColumn];
+            board[fromLine][fromColumn] = null;
+            board[toLine][toColumn] = f;
+            if (((f.isWhite() && toLine == 7) || (!f.isWhite() && toLine == 0)) && !f.isQueen()) {
+                f.setQueen(true);
+                setWarningText("Logistik.Figurine became queen");
+            }
+            moves.clear();
+            if(take){
+                hasToTakeFigurine(toLine, toColumn);
+                nextTake = true;
+            }
+            if(moves.isEmpty()){
+                whiteTurn = !f.isWhite();
+                takeFigurines(whiteTurn);
+                nextTake = false;
+            } else {
+                whiteTurn = f.isWhite();
+            }
+        }
+        checkWinCondition();
+    }
+
+    public void checkWinCondition() {
+        boolean whiteHasPieces = false;
+        boolean blackHasPieces = false;
+        boolean whiteCanMove = false;
+        boolean blackCanMove = false;
+
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board.length; col++) {
+                Figurine figurine = board[row][col];
+                if (figurine != null) {
+                    if (figurine.isWhite()) {
+                        whiteHasPieces = true;
+                        if (!whiteCanMove && hasValidMove(figurine, row, col)) {
+                            whiteCanMove = true;
+                        }
+                    } else if (!figurine.isWhite()) {
+                        blackHasPieces = true;
+                        if (!blackCanMove && hasValidMove(figurine, row, col)) {
+                            blackCanMove = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!whiteHasPieces || !whiteCanMove) {
+            setWarningText("Black has won!");
+            setWinner("Black");
+            gameOver = true;
+        } else if (!blackHasPieces || !blackCanMove) {
+            setWarningText("White has won!");
+            setWinner("White");
+            gameOver = true;
+        }
+    }
+
+    private boolean hasValidMove(Figurine piece, int row, int col) {
+        int[][] directions = piece.isQueen()
+                ? new int[][]{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}
+                : (piece.isWhite() ? new int[][]{{1, -1}, {1, 1}} : new int[][]{{-1, 1}, {-1, -1}});
+
+        for (int[] dir : directions) {
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
+            if (isInBounds(newRow, newCol) && getFigurineAt(newRow, newCol) == null) {
+                return true;
+            }
+
+            int midRow = row + dir[0];
+            int midCol = col + dir[1];
+            int jumpRow = row + 2 * dir[0];
+            int jumpCol = col + 2 * dir[1];
+
+            if (isInBounds(jumpRow, jumpCol) && getFigurineAt(jumpRow, jumpCol) == null) {
+                Figurine midPiece = getFigurineAt(midRow, midCol);
+                if (midPiece != null && midPiece.isWhite() != piece.isWhite()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isInBounds(int row, int col) {
+        return row >= 0 && row < 8 && col >= 0 && col < 8;
+    }
+
+    public boolean checkMovement(int fromLine, int fromColumn, int toLine, int toColumn, int i, boolean take){
         int takeColumn;
         int takeLine;
         if(!take){
             if(!(fromColumn+i == toColumn || fromColumn-i == toColumn)){
-                System.out.println("Logistics.Figurine didnt move.");
-                return;
+                setWarningText("You can move the figurine to the side only by one move");
+                return false;
+            } else {
+                return true;
             }
         } else {
             if(fromColumn+(2*i) == toColumn || fromColumn-(2*i) == toColumn){
-                System.out.println("take");
                 if(fromColumn < toColumn){
                     takeColumn = fromColumn+1;
                 } else {
@@ -98,35 +208,20 @@ public class Game {
                 } else {
                     takeLine = fromLine-1;
                 }
-                System.out.println("take: x = " + (takeColumn+1) + " y = " + (takeLine+1));
-                System.out.println("was: x = " + (fromColumn+1) + " y = " + (fromLine+1));
-                System.out.println("is: x = " + (toColumn+1) + " y = " + (toLine+1));
                 if(getFigurineAt(takeLine,takeColumn) == null){
-                    System.out.println("no figurine");
-                    return;
+                    setWarningText("You can move the figurine only by one move");
+                    return false;
                 } else if(getFigurineAt(takeLine,takeColumn).isWhite() == getFigurineAt(fromLine,fromColumn).isWhite()){
-                    System.out.println("same color");
-                    return;
+                    setWarningText("You can't take your figurine");
+                    return false;
                 }
                 board[takeLine][takeColumn] = null;
-                System.out.println("figurine taken");
+                return true;
             } else {
-                System.out.println("take is false");
-                return;
+                setWarningText("You can move the figurine to the side only by one move");
+                return false;
             }
         }
-        Figurine f = board[fromLine][fromColumn];
-        board[fromLine][fromColumn] = null;
-        board[toLine][toColumn] = f;
-        System.out.println("Logistics.Figurine moved.");
-        if ((f.isWhite() && toLine == 7) || (!f.isWhite() && toLine == 0)) {
-            f.setQueen(true);
-            System.out.println("Queen");
-        }
-        whiteTurn = !f.isWhite();
-        System.out.println("checking white moves: " + whiteTurn);
-        takeFigurines(whiteTurn);
-        System.out.println("checked moves: " + checked);
     }
 
     public String loadDefaultPosition(){
@@ -143,16 +238,16 @@ public class Game {
     }
 
     public void takeFigurines(boolean white){
-        checked = 0;
+        setChecked(0);
         boolean[][] takes = new boolean[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if(board[i][j] != null){
                     if(board[i][j].isWhite() == white){
-                        takeFigurine(i,j);
+                        hasToTakeFigurine(i,j);
                         takes[i][j] = take;
                         if(takes[i][j]){
-                            checked++;
+                            setChecked(getChecked() + 1);
                         }
                     }
                 }
@@ -160,107 +255,87 @@ public class Game {
         }
     }
 
-    public void takeFigurine(int fromLine, int fromColumn){
-        boolean figurines[] = new boolean[4];
-        boolean[] takes = new boolean[8];
+    public void hasToTakeFigurine(int fromLine, int fromColumn){
         take = false;
-        int index = -2;
-        int usedIndex = 0;
-        for (int y = -2; y <= 2; y++) {
-            if(y == 0){
-                index--;
+        Figurine current = board[fromLine][fromColumn];
+        if (current == null) return;
+
+        boolean isQueen = current.isQueen();
+        int direction;
+        if(current.isWhite()){
+            direction = 1;
+        } else {
+            direction = -1;
+        }
+
+        int[][] deltas = isQueen ? new int[][] {
+                {2, 2}, {2, -2}, {-2, 2}, {-2, -2}
+        } : new int[][] {
+                {2 * direction, 2}, {2 * direction, -2}
+        };
+
+        for (int[] delta : deltas) {
+            int toLine = fromLine + delta[0];
+            int toColumn = fromColumn + delta[1];
+            int midLine = fromLine + delta[0] / 2;
+            int midColumn = fromColumn + delta[1] / 2;
+
+            if (isInsideBoard(toLine, toColumn) && board[toLine][toColumn] == null) {
+                Figurine middle = board[midLine][midColumn];
+                if (middle != null && middle.isWhite() != current.isWhite()) {
+                    take = true;
+                    moves.add(new Move(fromLine, fromColumn, toLine, toColumn));
+                } else {
+                    nextTake = false;
+                }
             } else {
-
-                int i = -1;
-
-                if(y > 0){
-                    i = 1;
-                }
-
-                for (int x = -i*y; x < i*y; x=i*y) {
-                    System.out.println("we´re checking figurines at " + x + "," + y);
-                    System.out.println((fromLine+y) + " line y");
-                    System.out.println((fromColumn+x) + " column x");
-
-                    if(((fromLine+y) >= 0 && (fromLine+y) < 8) && ((fromColumn+x) >= 0 && (fromColumn+x) < 8)){
-                        System.out.println("x = " + (fromColumn+x) + " y = " + (fromLine+y) + " is checking");
-                        Figurine f = board[fromLine+y][fromColumn+x];
-
-                        System.out.println("index: " + index);
-                        if(y == i){
-                            index++;
-                            if(f != null){
-                                takes[index] = true;
-                                figurines[usedIndex] = f.isWhite();
-                                usedIndex++;
-                            } else {
-                                takes[index] = false;
-                            }
-                            index++;
-                        } else {
-                            if(x == -2){
-                                index-=y;
-                            }
-                            if(f == null){
-                                takes[index] = true;
-                            } else {
-                                takes[index] = false;
-                            }
-                            index-=x;
-                        }
-                        System.out.println("index: " + index);
-//                        if(takes[]){
-//
-//                        }
-//                        1-3
-//                        2-4
-//                        5-7
-//                        6-8
-
-//                        if(y == -2){
-//                            if(f == null){
-//                                figurines[index] = true;
-//                                index++;
-//                            }
-//                        } else {
-//                            if(f != null){
-//
-//                            }
-//                        }
-//                        if(f != null){
-//                            if(y == -2 || y == 1){
-//                                figurines[index] = f.isWhite();
-//                                index++;
-//                            } else {
-//                                if(f.isWhite() != figurines[usedIndex]){
-//                                    take = true;
-//                                    usedIndex++;
-//                                } else {
-//                                    take = false;
-//                                }
-//                                System.out.println("take is " + take);
-//                                System.out.println("x = " + (fromColumn+1) + " y = " + (fromLine+1));
-//                            }
-//                        }
-                    } else {
-                        if(y == i){
-                            index+=2;
-                        } else {
-                            if(x == -2){
-                                index-=y;
-                            }
-                            index-=x;
-                        }
-                    }
-                }
+                nextTake = false;
             }
         }
-        for (int i = 0; i < 8; i+=2) {
-            if(takes[i] == takes[i+1]){
-                take = true;
-                System.out.println("take " + i + ": " + take);
-            }
-        }
+    }
+
+    private boolean isInsideBoard(int line, int col) {
+        return line >= 0 && line < 8 && col >= 0 && col < 8;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public String getWarningText() {
+        return warningText;
+    }
+
+    public void setWarningText(String warningText) {
+        this.warningText = warningText;
+    }
+
+    public int getChecked() {
+        return checked;
+    }
+
+    public void setChecked(int checked) {
+        this.checked = checked;
+    }
+
+    public boolean isNextTake() {
+        return nextTake;
+    }
+
+    public void setNextTake(boolean nextTake) {
+        this.nextTake = nextTake;
     }
 }
 
