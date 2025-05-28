@@ -16,7 +16,7 @@ public class GuidePanel extends JPanel {
         //SOUBORY NA TEXT
 
         Button menuButton = new Button(20,20,300,100,"Menu", Color.GREEN);
-//        menuButton.addActionListener(e -> frame.showMenu());
+        menuButton.addActionListener(e -> frame.showMenu());
 
         grid.insets = new Insets(10, 0, 10, 0);
         grid.gridx = 0;

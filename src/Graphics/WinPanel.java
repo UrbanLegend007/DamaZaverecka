@@ -14,9 +14,9 @@ public class WinPanel extends JPanel {
         Label winnerLabel = new Label(color, Color.BLUE, 20,20,300,100,70);
         winnerLabel.setText(winner + " wins!");
         Button restartButton = new Button(20,120,300,100,"Restart", Color.GREEN);
-//        restartButton.addActionListener(e -> frame.showGame());
+        restartButton.addActionListener(e -> frame.showGame());
         Button menuButton = new Button(20,220,300,100,"Menu", Color.YELLOW);
-//        menuButton.addActionListener(e -> frame.showMenu());
+        menuButton.addActionListener(e -> frame.showMenu());
         Button exitButton = new Button(20,320,300,100,"Quit", Color.RED);
         exitButton.setText("Exit Logistik.Game");
         exitButton.addActionListener(e -> {System.exit(0);});

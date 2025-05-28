@@ -17,9 +17,9 @@ public class MenuPanel extends JPanel {
         Button guideButton = new Button(20,20,300,100,"Guide", Color.YELLOW);
         Button exitButton = new Button(20,90,300,100,"Quit", Color.RED);
 
-//        startButton.addActionListener(e -> frame.showGame());
-//        guideButton.addActionListener(e -> frame.showGuide());
-//        exitButton.addActionListener(e -> frame.quitGame());
+        startButton.addActionListener(e -> frame.showGame());
+        guideButton.addActionListener(e -> frame.showGuide());
+        exitButton.addActionListener(e -> frame.quitGame());
 
         grid.insets = new Insets(10, 0, 10, 0);
         grid.gridx = 0;
