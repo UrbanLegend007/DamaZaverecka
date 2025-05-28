@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import Logistics.*;
 
-class BoardPanel extends JPanel {
+public class BoardPanel extends JPanel {
 
     private static final int SQUARE_SIZE = 100;
     private static final int BOARD_SIZE = 8 * SQUARE_SIZE;
@@ -16,7 +16,7 @@ class BoardPanel extends JPanel {
     Game game;
     Frame frame;
 
-    BoardPanel(Frame frame) {
+    public BoardPanel(Frame frame) {
         timer.start();
         this.frame = frame;
         game = new Game();
