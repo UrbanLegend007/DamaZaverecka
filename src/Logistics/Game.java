@@ -23,7 +23,11 @@ public class Game {
     }
 
     public Figurine getFigurineAt(int line, int col) {
-        return board[line][col];
+        if(board[line][col] == null){
+            return null;
+        } else {
+            return board[line][col];
+        }
     }
 
     public String addFigurine(boolean white, int line, int col){
