@@ -30,7 +30,7 @@ public class Game {
         line -= 1;
         col -= 1;
         board[line][col] = new Figurine(white);
-        return "Logistik.Figurine added";
+        return "Figurine added";
     }
 
     public void moveFigurine(int fromLine, int fromColumn, int toLine, int toColumn) {
@@ -58,7 +58,7 @@ public class Game {
 
     public void checkMove(int fromLine, int fromColumn, int toLine, int toColumn){
         if(getFigurineAt(fromLine,fromColumn) == null){
-            warningText = "Logistik.Figurine not found";
+            warningText = "Figurine not found";
             return;
         }
         int i;
@@ -100,7 +100,7 @@ public class Game {
             board[toLine][toColumn] = f;
             if (((f.isWhite() && toLine == 7) || (!f.isWhite() && toLine == 0)) && !f.isQueen()) {
                 f.setQueen(true);
-                setWarningText("Logistik.Figurine became queen");
+                setWarningText("Figurine became queen");
             }
             moves.clear();
             if(take){
