@@ -44,7 +44,7 @@ public class BoardPanel extends JPanel {
         });
 
         // Menu button setup
-        menuButton = new Button(820, 50, 120, 55, "Quit Game", Color.GREEN, 35);
+        menuButton = new Button(820, 50, 240, 55, "Quit Game", Color.GREEN, 35);
         menuButton.addActionListener(e -> {
             frame.restartGame(true);
             boardCanvas.repaint();

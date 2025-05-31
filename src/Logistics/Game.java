@@ -227,7 +227,7 @@ public class Game {
      * @param col current column index of the figurine
      * @return true if at least one valid move exists, false otherwise
      */
-    private boolean hasValidMove(Figurine piece, int row, int col) {
+    public boolean hasValidMove(Figurine piece, int row, int col) {
         int[][] directions = piece.isQueen()
                 ? new int[][]{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}
                 : (piece.isWhite() ? new int[][]{{1, -1}, {1, 1}} : new int[][]{{-1, 1}, {-1, -1}});
@@ -253,6 +253,21 @@ public class Game {
         }
 
         return false;
+    }
+
+    /**
+     * Clears the entire game board by setting all positions to null.
+     * <p>
+     * This method removes all figurines from the board and resets it to an empty state.
+     * It is useful for setting up custom test positions or starting a new game from scratch.
+     * </p>
+     */
+    public void clearBoard() {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                board[i][j] = null;
+            }
+        }
     }
 
     /**
