@@ -39,6 +39,9 @@ public class MoveCommand implements Command {
      */
     private boolean whiteTurn;
 
+    private boolean wasQueen;
+
+
     /**
      * List of captured figurines during this move, stored for undoing purposes.
      */
@@ -81,6 +84,7 @@ public class MoveCommand implements Command {
             }
         }
         Figurine piece = game.getFigurineAt(fromRow, fromCol);
+        wasQueen = piece.isQueen();
         game.setFigurineAt(toRow, toCol, piece);
         game.setFigurineAt(fromRow, fromCol, null);
     }
@@ -94,6 +98,7 @@ public class MoveCommand implements Command {
     public void undo() {
         Figurine piece = game.getFigurineAt(toRow, toCol);
         game.setFigurineAt(fromRow, fromCol, piece);
+        piece.setQueen(wasQueen);
         game.setFigurineAt(toRow, toCol, null);
         for (int i = 0; i < capturedFigurines.size(); i++) {
             game.setFigurineAt(capturedFigurines.get(i).row, capturedFigurines.get(i).col, capturedFigurines.get(i).figurine);
