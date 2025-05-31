@@ -39,6 +39,9 @@ public class MoveCommand implements Command {
      */
     private boolean whiteTurn;
 
+    /**
+     * Sets whether the figurine was a queen.
+     */
     private boolean wasQueen;
 
 
