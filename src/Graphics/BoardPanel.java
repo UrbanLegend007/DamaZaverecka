@@ -17,6 +17,7 @@ public class BoardPanel extends JPanel {
     private int period = 0;
     private String changedWarning = "";
     private Button undoButton;
+    private Button menuButton;
     private BoardCanvas boardCanvas;
 
     public BoardPanel(Frame frame) {
@@ -29,11 +30,17 @@ public class BoardPanel extends JPanel {
             game.undoLastMove();
             boardCanvas.repaint();
         });
+        menuButton = new Button(820, 50, 120, 55, "Menu", Color.GREEN, 35);
+        menuButton.addActionListener(e -> {
+            frame.restartGame(true);
+            boardCanvas.repaint();
+        });
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.setPreferredSize(new Dimension(BOARD_SIZE, 60));
         topPanel.setBackground(Color.BLACK);
         topPanel.add(undoButton);
+        topPanel.add(menuButton);
         topPanel.add(warningText);
         this.add(topPanel, BorderLayout.NORTH);
 
@@ -126,7 +133,12 @@ public class BoardPanel extends JPanel {
                     }
                     Figurine f = game.getFigurineAt(lin, col);
                     if (f != null) {
-                        Color c = f.isWhite() ? Color.WHITE : Color.RED;
+                        Color c;
+                        if(f.isWhite()){
+                            c = Color.WHITE;
+                        } else {
+                            c = Color.RED;
+                        }
                         if (f.isQueen()) {
                             g.setColor(Color.YELLOW);
                             g.fillOval(col * SQUARE_SIZE + 10, line * SQUARE_SIZE + 10, SQUARE_SIZE - 20, SQUARE_SIZE - 20);
