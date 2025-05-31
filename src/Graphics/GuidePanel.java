@@ -21,7 +21,7 @@ public class GuidePanel extends JPanel {
         menuButton.addActionListener(e -> frame.showMenu());
 
         JScrollPane scroll = new JScrollPane(textArea);
-        scroll.setPreferredSize(new Dimension(600, 600));
+        scroll.setPreferredSize(new Dimension(600, 680));
 
         grid.insets = new Insets(10, 0, 10, 0);
         grid.gridx = 0;
