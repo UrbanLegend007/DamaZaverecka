@@ -10,7 +10,7 @@ Obsah repozitáře
 - `src/` – zdrojové kódy
 - `res/` – zdroje (např. obrázky, data)
 - `DOKUMENTACE.PDF` – dokumentace projektu
-- `Projekt_Prijmeni.jar` – spustitelný soubor
+- `Dama_Urbanec.jar` – spustitelný soubor
 - `README.md` – tento soubor
 
 Autor
