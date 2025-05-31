@@ -20,6 +20,8 @@ public class GuidePanel extends JPanel {
      * Constructs a new {@code GuidePanel}.
      *
      * @param frame the main application frame used to switch panels
+     *
+     * Here Chat GPT helped me ONLY with creating GritBagLayout.
      */
     public GuidePanel(Frame frame) {
         setLayout(new GridBagLayout());

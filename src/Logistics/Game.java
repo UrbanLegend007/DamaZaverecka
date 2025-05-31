@@ -226,6 +226,8 @@ public class Game {
      * @param row current row index of the figurine
      * @param col current column index of the figurine
      * @return true if at least one valid move exists, false otherwise
+     *
+     * Here in this method Chat GPT helped me.
      */
     public boolean hasValidMove(Figurine piece, int row, int col) {
         int[][] directions = piece.isQueen()
@@ -377,6 +379,8 @@ public class Game {
      * If yes, adds the capture move to the moves list and sets the take flag.
      * @param fromLine row index of the piece
      * @param fromColumn column index of the piece
+     *
+     * Here in this method Chat GPT helped me.
      */
     public void hasToTakeFigurine(int fromLine, int fromColumn){
         take = false;
