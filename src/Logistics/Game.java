@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-
 public class Game {
 
     private Figurine[][] board;
@@ -16,10 +15,27 @@ public class Game {
     private boolean gameOver = false;
     private String warningText = null;
     public List<Move> moves = new ArrayList<>();
+    CommandManager commandManager = new CommandManager();
 
     public Game(){
         board = new Figurine[8][8];
-        loadDefaultPosition();
+        System.out.println(loadDefaultPosition());
+    }
+
+    public void makeMove(int fromLine, int fromColumn, int toLine, int toColumn, boolean whiteTurn) {
+        MoveCommand move = new MoveCommand(this, fromLine, fromColumn, toLine, toColumn, whiteTurn);
+        commandManager.executeCommand(move);
+    }
+
+    public void undoLastMove() {
+        commandManager.undo();
+        setWarningText(commandManager.getWarning());
+    }
+
+    public void setFigurineAt(int row, int col, Figurine figurine) {
+        if (row >= 0 && row < board.length && col >= 0 && col < board[row].length) {
+            board[row][col] = figurine;
+        }
     }
 
     public Figurine getFigurineAt(int line, int col) {
@@ -30,14 +46,10 @@ public class Game {
         }
     }
 
-    public String addFigurine(boolean white, int line, int col){
-        line -= 1;
-        col -= 1;
-        board[line][col] = new Figurine(white);
-        return "Figurine added";
-    }
-
     public void moveFigurine(int fromLine, int fromColumn, int toLine, int toColumn) {
+        if(getFigurineAt(fromLine, fromColumn) == null){
+            return;
+        }
         if(whiteTurn){
             if(!getFigurineAt(fromLine, fromColumn).isWhite()){
                 setWarningText("Now is white's turn");
@@ -99,9 +111,8 @@ public class Game {
             }
         }
         if(checkMovement(fromLine, fromColumn, toLine, toColumn, i, take)){
-            Figurine f = board[fromLine][fromColumn];
-            board[fromLine][fromColumn] = null;
-            board[toLine][toColumn] = f;
+            Figurine f = getFigurineAt(fromLine, fromColumn);
+            makeMove(fromLine, fromColumn, toLine, toColumn, whiteTurn);
             if (((f.isWhite() && toLine == 7) || (!f.isWhite() && toLine == 0)) && !f.isQueen()) {
                 f.setQueen(true);
                 setWarningText("Figurine became queen");
@@ -111,6 +122,7 @@ public class Game {
                 hasToTakeFigurine(toLine, toColumn);
                 nextTake = true;
             }
+
             if(moves.isEmpty()){
                 whiteTurn = !f.isWhite();
                 takeFigurines(whiteTurn);
@@ -130,7 +142,7 @@ public class Game {
 
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board.length; col++) {
-                Figurine figurine = board[row][col];
+                Figurine figurine = getFigurineAt(row, col);
                 if (figurine != null) {
                     if (figurine.isWhite()) {
                         whiteHasPieces = true;
@@ -219,7 +231,6 @@ public class Game {
                     setWarningText("You can't take your figurine");
                     return false;
                 }
-                board[takeLine][takeColumn] = null;
                 return true;
             } else {
                 setWarningText("You can move the figurine to the side only by one move");
@@ -233,7 +244,10 @@ public class Game {
         try (BufferedReader reader = new BufferedReader(new FileReader("res/defaultPosition.txt"))){
             while((line = reader.readLine()) != null){
                 String parts[] = line.split(",");
-                addFigurine(Boolean.parseBoolean(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+                Figurine f = new Figurine(Boolean.parseBoolean(parts[0]), false);
+                int lin = Integer.parseInt(parts[1]) - 1;
+                int col = Integer.parseInt(parts[2]) - 1;
+                setFigurineAt(lin, col, f);
             }
             return "Default position loaded";
         } catch (Exception e){
@@ -242,16 +256,17 @@ public class Game {
     }
 
     public void takeFigurines(boolean white){
-        setChecked(0);
+        checked = 0;
+        moves.clear();
         boolean[][] takes = new boolean[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if(board[i][j] != null){
-                    if(board[i][j].isWhite() == white){
+                if(getFigurineAt(i,j) != null){
+                    if(getFigurineAt(i,j).isWhite() == white){
                         hasToTakeFigurine(i,j);
                         takes[i][j] = take;
                         if(takes[i][j]){
-                            setChecked(getChecked() + 1);
+                            checked++;
                         }
                     }
                 }
@@ -261,7 +276,7 @@ public class Game {
 
     public void hasToTakeFigurine(int fromLine, int fromColumn){
         take = false;
-        Figurine current = board[fromLine][fromColumn];
+        Figurine current = getFigurineAt(fromLine, fromColumn);
         if (current == null) return;
 
         boolean isQueen = current.isQueen();
@@ -284,8 +299,8 @@ public class Game {
             int midLine = fromLine + delta[0] / 2;
             int midColumn = fromColumn + delta[1] / 2;
 
-            if (isInsideBoard(toLine, toColumn) && board[toLine][toColumn] == null) {
-                Figurine middle = board[midLine][midColumn];
+            if (isInsideBoard(toLine, toColumn) && getFigurineAt(toLine, toColumn) == null) {
+                Figurine middle = getFigurineAt(midLine, midColumn);
                 if (middle != null && middle.isWhite() != current.isWhite()) {
                     take = true;
                     moves.add(new Move(fromLine, fromColumn, toLine, toColumn));
@@ -340,6 +355,22 @@ public class Game {
 
     public void setNextTake(boolean nextTake) {
         this.nextTake = nextTake;
+    }
+
+    public boolean isTake() {
+        return take;
+    }
+
+    public void setTake(boolean take) {
+        this.take = take;
+    }
+
+    public boolean isWhiteTurn() {
+        return whiteTurn;
+    }
+
+    public void setWhiteTurn(boolean whiteTurn) {
+        this.whiteTurn = whiteTurn;
     }
 }
 
