@@ -16,3 +16,6 @@ Capturing with a Queen works the same way.
 
 Turn Order.
 Players take turns. If a player has no legal moves, they lose.
+
+Undo
+Undo button can undo players moves.
