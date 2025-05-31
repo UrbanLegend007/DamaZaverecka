@@ -13,9 +13,9 @@ public class MenuPanel extends JPanel {
         Label checkersGame = new Label(Color.RED, Color.orange, 20,20,300,100,70);
         checkersGame.setText("Checkers Game");
 
-        Button startButton = new Button(20,20,300,100,"Start", Color.GREEN);
-        Button guideButton = new Button(20,20,300,100,"Guide", Color.YELLOW);
-        Button exitButton = new Button(20,90,300,100,"Quit", Color.RED);
+        Button startButton = new Button(20,20,300,100,"Start", Color.GREEN,60);
+        Button guideButton = new Button(20,20,300,100,"Guide", Color.YELLOW,60);
+        Button exitButton = new Button(20,90,300,100,"Quit", Color.RED,60);
 
         startButton.addActionListener(e -> frame.showGame());
         guideButton.addActionListener(e -> frame.showGuide());

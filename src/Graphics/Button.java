@@ -10,11 +10,12 @@ import java.awt.event.MouseListener;
 public class Button extends JButton implements MouseListener {
 
     Color color;
-    Font font = new Font("Times New Roman", Font.PLAIN, 60);
-    public Button(int x, int y, int width, int height, String title, Color color){
+    Font font;
+    public Button(int x, int y, int width, int height, String title, Color color, int size){
 
         this.color = color;
 
+        this.font = new Font("Times New Roman", Font.PLAIN, size);
         this.setOpaque(true);
         this.setBounds(x, y, width, height);
         this.setLocation(x, y);

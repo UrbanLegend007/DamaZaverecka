@@ -17,7 +17,7 @@ public class GuidePanel extends JPanel {
 
         TextArea textArea = new TextArea(loadGuideText());
 
-        Button menuButton = new Button(20,20,300,100,"Menu", Color.GREEN);
+        Button menuButton = new Button(20,20,300,100,"Menu", Color.GREEN,60);
         menuButton.addActionListener(e -> frame.showMenu());
 
         JScrollPane scroll = new JScrollPane(textArea);

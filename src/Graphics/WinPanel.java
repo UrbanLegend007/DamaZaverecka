@@ -13,11 +13,11 @@ public class WinPanel extends JPanel {
         Color color = (winner == "Black") ? Color.RED : Color.WHITE;
         Label winnerLabel = new Label(color, Color.BLUE, 20,20,300,100,70);
         winnerLabel.setText(winner + " wins!");
-        Button restartButton = new Button(20,120,300,100,"Restart", Color.GREEN);
+        Button restartButton = new Button(20,120,300,100,"Restart", Color.GREEN,60);
         restartButton.addActionListener(e -> frame.showGame());
-        Button menuButton = new Button(20,220,300,100,"Menu", Color.YELLOW);
+        Button menuButton = new Button(20,220,300,100,"Menu", Color.YELLOW,60);
         menuButton.addActionListener(e -> frame.showMenu());
-        Button exitButton = new Button(20,320,300,100,"Quit", Color.RED);
+        Button exitButton = new Button(20,320,300,100,"Quit", Color.RED,60);
         exitButton.setText("Exit Game");
         exitButton.addActionListener(e -> {System.exit(0);});
 
