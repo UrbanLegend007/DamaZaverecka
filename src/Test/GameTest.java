@@ -2,8 +2,21 @@ package Test;
 
 import Logistics.*;
 
+/**
+ * A set of manual test methods for the {@link Game} class.
+ * <p>
+ * Each test is designed to verify specific game logic such as movement rules,
+ * capturing behavior, and board loading functionality.
+ * <p>
+ * Tests are executed from the {@code main} method and results are printed to the console.
+ */
 public class GameTest {
 
+    /**
+     * Main entry point to run all test methods.
+     * Prints the results of each test to the console.
+     * @param args Command line arguments (not used)
+     */
     public static void main(String[] args) {
         testCannotMoveIfCaptureAvailable();
         testMultipleCapturesQueen();
@@ -12,6 +25,11 @@ public class GameTest {
         testLoadDefaultPosition();
     }
 
+    /**
+     * Tests that a piece cannot move normally if there is a capture available.
+     * Sets up a board scenario where a capture is possible and verifies that
+     * a valid move without capturing is not allowed.
+     */
     public static void testCannotMoveIfCaptureAvailable() {
         Game game = new Game();
         game.clearBoard();
@@ -23,9 +41,13 @@ public class GameTest {
         boolean result = game.hasValidMove(game.getFigurineAt(5,4),5, 4);
 
         System.out.println("testCannotMoveIfCaptureAvailable: " + (result ? "✅ OK" : "❌ FAILED"));
-
     }
 
+    /**
+     * Tests multiple captures performed manually by a queen piece.
+     * The test verifies that the queen can perform sequential captures
+     * by moving stepwise and that the captures are correctly recognized.
+     */
     public static void testMultipleCapturesQueen() {
         Game game = new Game();
         game.clearBoard();
@@ -34,23 +56,25 @@ public class GameTest {
         Figurine black1 = new Figurine(false,true);
         Figurine black2 = new Figurine(false,true);
 
-        game.setFigurineAt(5, 0, white);     // bílá figurka
-        game.setFigurineAt(4, 1, black1);    // černá figurka 1
-        game.setFigurineAt(2, 3, black2);    // černá figurka 2
+        game.setFigurineAt(5, 0, white);
+        game.setFigurineAt(4, 1, black1);
+        game.setFigurineAt(2, 3, black2);
 
-        // První tah
         boolean canTake1 = game.checkMovement(5, 0, 3, 2, 1, true);
-        game.makeMove(5, 0, 3, 2,true); // první skok
+        game.makeMove(5, 0, 3, 2,true); // first jump
 
-        // Druhý tah ve stejném kole (ručně kliknuté)
         boolean canTake2 = game.checkMovement(3, 2, 1, 4, 1, true);
-        game.makeMove(3, 2, 1, 4,true); // druhý skok
+        game.makeMove(3, 2, 1, 4,true); // second jump
 
         boolean result = canTake1 && canTake2 && game.getFigurineAt(1, 4) != null && game.getFigurineAt(1, 4).isWhite();
 
         System.out.println("testMultipleCapturesManual: " + (result ? "✅ OK" : "❌ FAILED"));
     }
 
+    /**
+     * Tests that a queen can only move exactly one square diagonally in any direction
+     * when not capturing. It verifies that moving more than one square without capture is invalid.
+     */
     public static void testQueenMovementWithoutCapture() {
         Game game = new Game();
         game.clearBoard();
@@ -58,19 +82,21 @@ public class GameTest {
         Figurine whiteQueen = new Figurine(true,true);
         game.setFigurineAt(5, 2, whiteQueen);
 
-        // Zkusí jít o 2 pole diagonálně – nesmí
         boolean invalid = game.checkMovement(5, 2, 3, 0, 1, false);
-
-        // Zkusí jít o 1 pole dozadu – smí
         boolean valid = game.checkMovement(5, 2, 4, 1, 1, false);
 
         System.out.println("testQueenMovementOneSquareOnly: " + (!invalid && valid ? "✅ OK" : "❌ FAILED"));
     }
 
+    /**
+     * Tests that a piece cannot capture a figurine of the same color.
+     * Sets up a scenario where the player tries to capture their own piece
+     * and verifies that the move is rejected with the correct warning message.
+     */
     public static void testCannotCaptureOwnPiece() {
         Game game = new Game();
-        game.setFigurineAt(4, 3, new Figurine(true, false)); // bílá
-        game.setFigurineAt(3, 2, new Figurine(true, false)); // bílá
+        game.setFigurineAt(4, 3, new Figurine(true, false)); // white piece
+        game.setFigurineAt(3, 2, new Figurine(true, false)); // white piece
         game.setWhiteTurn(true);
 
         boolean result = game.checkMovement(4, 3, 2, 1, 1, true);
@@ -79,11 +105,15 @@ public class GameTest {
         printResult("testCannotCaptureOwnPiece", passed);
     }
 
+    /**
+     * Tests loading the default position from a file.
+     * Writes a test default position to the file system, loads it into the game,
+     * and verifies that pieces are correctly placed with the expected colors.
+     */
     public static void testLoadDefaultPosition() {
         Game game = new Game();
 
         try {
-            // Simulace zápisu do souboru
             java.io.FileWriter writer = new java.io.FileWriter("res/defaultPosition.txt");
             writer.write("true,1,1\n" +
                     "true,3,1\n" +
@@ -122,12 +152,16 @@ public class GameTest {
 
         } catch (Exception e) {
             printResult("testLoadDefaultPosition", false);
-            System.out.println("Chyba při načítání nebo zápisu souboru: " + e.getMessage());
+            System.out.println("Error loading or writing the file: " + e.getMessage());
         }
     }
 
+    /**
+     * Utility method to print formatted test results.
+     * @param testName The name of the test
+     * @param passed Whether the test passed or failed
+     */
     private static void printResult(String testName, boolean passed) {
         System.out.println(testName + ": " + (passed ? "✅ OK" : "❌ FAILED"));
     }
 }
-
