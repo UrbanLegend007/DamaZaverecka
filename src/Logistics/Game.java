@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Represents the game logic and state of a checkers-like board game.
+ * Handles the game board, player turns, moves, capturing pieces, and win conditions.
+ */
 public class Game {
 
     private Figurine[][] board;
@@ -17,27 +22,53 @@ public class Game {
     public List<Move> moves = new ArrayList<>();
     CommandManager commandManager = new CommandManager();
 
+    /**
+     * Constructs a new Game instance and loads the default board position.
+     */
     public Game(){
         board = new Figurine[8][8];
         System.out.println(loadDefaultPosition());
     }
 
+    /**
+     * Executes a move from one position to another and updates the game state accordingly.
+     * @param fromLine starting row index of the piece
+     * @param fromColumn starting column index of the piece
+     * @param toLine target row index to move the piece
+     * @param toColumn target column index to move the piece
+     * @param whiteTurn boolean indicating if it is white's turn
+     */
     public void makeMove(int fromLine, int fromColumn, int toLine, int toColumn, boolean whiteTurn) {
         MoveCommand move = new MoveCommand(this, fromLine, fromColumn, toLine, toColumn, whiteTurn);
         commandManager.executeCommand(move);
     }
 
+    /**
+     * Undoes the last move executed in the game.
+     */
     public void undoLastMove() {
         commandManager.undo();
         setWarningText(commandManager.getWarning());
     }
 
+    /**
+     * Sets a figurine at the specified position on the board.
+     * @param row the row index on the board
+     * @param col the column index on the board
+     * @param figurine the figurine to place, or null to clear the position
+     */
     public void setFigurineAt(int row, int col, Figurine figurine) {
         if (row >= 0 && row < board.length && col >= 0 && col < board[row].length) {
             board[row][col] = figurine;
         }
     }
 
+    /**
+     * Retrieves the figurine at the specified position.
+     * @param line the row index
+     * @param col the column index
+     * @return the Figurine at the position or null if empty
+     */
     public Figurine getFigurineAt(int line, int col) {
         if(board[line][col] == null){
             return null;
@@ -46,6 +77,13 @@ public class Game {
         }
     }
 
+    /**
+     * Attempts to move a figurine from one position to another, validating the move according to game rules.
+     * @param fromLine starting row index
+     * @param fromColumn starting column index
+     * @param toLine target row index
+     * @param toColumn target column index
+     */
     public void moveFigurine(int fromLine, int fromColumn, int toLine, int toColumn) {
         if(getFigurineAt(fromLine, fromColumn) == null){
             return;
@@ -72,6 +110,14 @@ public class Game {
         checkMove(fromLine, fromColumn, toLine, toColumn);
     }
 
+    /**
+     * Checks if the intended move is valid, applies it, and updates game state.
+     * Handles captures, promotion to queen, turn switching, and available moves.
+     * @param fromLine starting row index
+     * @param fromColumn starting column index
+     * @param toLine target row index
+     * @param toColumn target column index
+     */
     public void checkMove(int fromLine, int fromColumn, int toLine, int toColumn){
         if(getFigurineAt(fromLine,fromColumn) == null){
             warningText = "Figurine not found";
@@ -134,6 +180,10 @@ public class Game {
         checkWinCondition();
     }
 
+    /**
+     * Checks if a player has won by evaluating if the opponent has any pieces or valid moves left.
+     * Sets the winner and game over flag accordingly.
+     */
     public void checkWinCondition() {
         boolean whiteHasPieces = false;
         boolean blackHasPieces = false;
@@ -170,6 +220,13 @@ public class Game {
         }
     }
 
+    /**
+     * Checks if the given figurine has any valid moves available.
+     * @param piece the figurine to check
+     * @param row current row index of the figurine
+     * @param col current column index of the figurine
+     * @return true if at least one valid move exists, false otherwise
+     */
     private boolean hasValidMove(Figurine piece, int row, int col) {
         int[][] directions = piece.isQueen()
                 ? new int[][]{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}
@@ -198,10 +255,26 @@ public class Game {
         return false;
     }
 
+    /**
+     * Checks if the given coordinates are within the board boundaries.
+     * @param row row index to check
+     * @param col column index to check
+     * @return true if inside board, false otherwise
+     */
     private boolean isInBounds(int row, int col) {
         return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
 
+    /**
+     * Checks if a movement from one position to another is valid based on side moves and capturing rules.
+     * @param fromLine starting row index
+     * @param fromColumn starting column index
+     * @param toLine target row index
+     * @param toColumn target column index
+     * @param i direction modifier (1 or -1) based on piece color
+     * @param take true if the move is a capture
+     * @return true if the move is valid, false otherwise
+     */
     public boolean checkMovement(int fromLine, int fromColumn, int toLine, int toColumn, int i, boolean take){
         int takeColumn;
         int takeLine;
@@ -239,6 +312,11 @@ public class Game {
         }
     }
 
+    /**
+     * Loads the default board position from a resource file "res/defaultPosition.txt".
+     * Each line in the file describes a figurine color and its position.
+     * @return status message indicating success or error during loading
+     */
     public String loadDefaultPosition(){
         String line;
         try (BufferedReader reader = new BufferedReader(new FileReader("res/defaultPosition.txt"))){
@@ -255,6 +333,11 @@ public class Game {
         }
     }
 
+    /**
+     * Checks all pieces of the specified color to see if any must perform a capture.
+     * Updates the list of possible capture moves and a counter of such pieces.
+     * @param white true to check white pieces, false for black pieces
+     */
     public void takeFigurines(boolean white){
         checked = 0;
         moves.clear();
@@ -274,6 +357,12 @@ public class Game {
         }
     }
 
+    /**
+     * Determines whether the piece at the given position has any capture moves available.
+     * If yes, adds the capture move to the moves list and sets the take flag.
+     * @param fromLine row index of the piece
+     * @param fromColumn column index of the piece
+     */
     public void hasToTakeFigurine(int fromLine, int fromColumn){
         take = false;
         Figurine current = getFigurineAt(fromLine, fromColumn);
@@ -313,9 +402,17 @@ public class Game {
         }
     }
 
+    /**
+     * Checks if given position is inside the board limits.
+     * @param line row index to check
+     * @param col column index to check
+     * @return true if inside board, false otherwise
+     */
     private boolean isInsideBoard(int line, int col) {
         return line >= 0 && line < 8 && col >= 0 && col < 8;
     }
+
+    // Getters and setters for game state variables
 
     public String getWinner() {
         return winner;
@@ -386,4 +483,4 @@ public class Game {
    2 |__|__|__|__|__|__|__|__|
    1 |__|__|__|__|__|__|__|__|
        1  2  3  4  5  6  7  8  column
- */
+*/
