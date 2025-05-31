@@ -5,9 +5,9 @@ public class Figurine {
     private boolean white;
     private boolean queen;
 
-    public Figurine(boolean white) {
+    public Figurine(boolean white, boolean queen) {
         this.white = white;
-        this.queen = false;
+        this.queen = queen;
     }
 
     public boolean isWhite() {
